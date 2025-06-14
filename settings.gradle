@@ -1,0 +1,2 @@
+rootProject.name = 'TheOneBillionRowChallenge'
+include('app')

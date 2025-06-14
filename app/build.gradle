@@ -1,0 +1,20 @@
+plugins {
+	id 'application'
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_24
+	targetCompatibility = JavaVersion.VERSION_24
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+}
+
+application {
+	// Example: gradle run -Pversion=01 --args="...filename..."
+	mainClass = 'jmat.tobrc.TOBRC' + project.property("version")
+}
