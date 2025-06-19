@@ -10,7 +10,7 @@ $ gradle run -Pversion=00
 $ gradle run -Pversion=00 --args="../../1brc-data/measurements_100m.txt"
 
 # To run with Java Flight Recorder:
-$ gradle run -Pversion=00 -Pjfr="-XX:StartFlightRecording=duration=20s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
+$ gradle run -Pversion=01 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
 
 # To view the methods that are sampled the most:
 $ jfr view hot-methods app/100m.jfr
@@ -25,6 +25,7 @@ Times in seconds.
 | :------                                                                                                                     | ------: | -----: | -----: | ------: |
 | [Baseline](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java) |       1 |   1.77 |  13.67 |  161.40 |
 | [00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)           |       1 |   2.84 |  23.78 | 1015.45 |
+| [01](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC01.java)           |       1 |   2.71 |  23.52 |  223.72 |
 
 
 #### [TOBRC00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -36,6 +37,7 @@ I had to use java.math.BigDecimal for the mean to get
 to pass.
 
 ```
+$ gradle run -Pversion=00 -Pjfr="-XX:StartFlightRecording=duration=20s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
 $ jfr view hot-methods app/100m.jfr
 
                                  Java Methods that Executes the Most
@@ -67,6 +69,7 @@ java.lang.StringLatin1.replace(byte[], char, char)                              
 java.io.FileInputStream.available()                                                         1   0.23%
 jdk.internal.util.ArraysSupport.vectorizedHashCode(Object, int, int, int, int)              1   0.23%
 
+
 $ jfr view allocation-by-class app/100m.jfr
 
                               Allocation by Class
@@ -87,4 +90,66 @@ java.util.ArrayList$SubList                                               0.00%
 java.util.ArrayList                                                       0.00%
 java.math.BigInteger                                                      0.00%
 java.util.regex.Pattern                                                   0.00%
+```
+
+
+#### [TOBRC01](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC01.java)
+
+Changed java.math.BigDecimal to double.
+[measurements-rounding.txt](https://github.com/gunnarmorling/1brc/blob/main/src/test/resources/samples/measurements-rounding.txt)
+still passed...well...that is embarrassing...
+
+```
+$ gradle run -Pversion=01 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
+$ jfr view hot-methods app/100m.jfr
+
+                                          Java Methods that Executes the Most
+
+Method                                                                                                  Samples Percent
+------------------------------------------------------------------------------------------------------- ------- -------
+java.lang.String.split(char, int, boolean)                                                                   78  14.80%
+java.io.BufferedReader.readLine(boolean, boolean[])                                                          74  14.04%
+jdk.internal.math.DoubleToDecimal.toDecimal(byte[], int, double, FormattedFPDecimal)                         68  12.90%
+jdk.internal.math.DoubleToDecimal.toChars1(byte[], int, int, int, int, int)                                  66  12.52%
+jmat.tobrc.TOBRC00.calculate(File)                                                                           46   8.73%
+jdk.internal.math.FloatingDecimal.readJavaFormatString(String)                                               35   6.64%
+sun.nio.cs.UTF_8$Decoder.decodeArrayLoop(ByteBuffer, CharBuffer)                                             30   5.69%
+jdk.internal.math.FloatingDecimal$ASCIIToBinaryBuffer.doubleValue()                                          22   4.17%
+java.math.BigDecimal.<init>(char[], int, int, MathContext)                                                   19   3.61%
+jdk.internal.util.ArraysSupport.unsignedHashCode(int, byte[], int, int)                                      16   3.04%
+java.util.HashMap.getNode(Object)                                                                            12   2.28%
+jdk.internal.math.ToDecimal.removeTrailingZeroes(byte[], int)                                                10   1.90%
+jdk.internal.math.DoubleToDecimal.toChars(byte[], int, long, int, FormattedFPDecimal)                        10   1.90%
+java.math.BigDecimal.<init>(char[], int, int)                                                                 8   1.52%
+java.lang.String.substring(int, int)                                                                          8   1.52%
+java.lang.String.<init>(Charset, byte[], int, int)                                                            6   1.14%
+java.lang.String.equals(Object)                                                                               5   0.95%
+sun.nio.cs.UTF_8$Decoder.xflow(Buffer, int, int, Buffer, int, int)                                            5   0.95%
+java.lang.String.<init>(byte[], int, int, Charset)                                                            2   0.38%
+java.io.BufferedReader.readLine()                                                                             1   0.19%
+java.util.ArrayList.grow()                                                                                    1   0.19%
+java.util.Formatter$FormatSpecifier.print(...)                                                                1   0.19%
+jdk.internal.math.DoubleToDecimal.toDecimal(byte[], int, int, long, int, FormattedFPDecimal)                  1   0.19%
+java.lang.String.decodeASCII(byte[], int, char[], int, int)                                                   1   0.19%
+jmat.tobrc.TOBRC00$MeasurementSummary.add(double)                                                             1   0.19%
+
+
+$ jfr view allocation-by-class app/100m.jfr
+
+                              Allocation by Class
+
+Object Type                                                 Allocation Pressure
+----------------------------------------------------------- -------------------
+byte[]                                                                   36.08%
+java.lang.String                                                         20.14%
+java.math.BigDecimal                                                     17.62%
+java.lang.Object[]                                                       10.83%
+jdk.internal.math.FloatingDecimal$ASCIIToBinaryBuffer                     5.96%
+char[]                                                                    4.97%
+java.lang.String[]                                                        4.35%
+java.util.concurrent.ConcurrentHashMap$Node[]                             0.04%
+java.lang.StringBuilder                                                   0.02%
+int[]                                                                     0.00%
+java.util.ArrayList                                                       0.00%
+java.lang.classfile.constantpool.PoolEntry[]                              0.00%
 ```
