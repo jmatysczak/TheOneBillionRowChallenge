@@ -16,5 +16,9 @@ dependencies {
 
 application {
 	// Example: gradle run -Pversion=01 --args="...filename..."
-	mainClass = 'jmat.tobrc.TOBRC' + project.property("version")
+	mainClass = 'jmat.tobrc.TOBRC' + project.property('version')
+
+	if(project.hasProperty('jfr')) {
+		applicationDefaultJvmArgs = [project.property('jfr')]
+	}
 }

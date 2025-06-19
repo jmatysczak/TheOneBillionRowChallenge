@@ -7,7 +7,14 @@ Some fun coding using: https://github.com/gunnarmorling/1brc
 $ gradle run -Pversion=00
 
 # To process a file:
-$ gradle run -Pversion=00 --args="../../1brc-data/measurements_1b.txt"
+$ gradle run -Pversion=00 --args="../../1brc-data/measurements_100m.txt"
+
+# To run with Java Flight Recorder:
+$ gradle run -Pversion=00 -Pjfr="-XX:StartFlightRecording=duration=20s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
+
+# To view the methods that are sampled the most:
+$ jfr view hot-methods app/100m.jfr
+
 ```
 
 #### Results
@@ -27,3 +34,4 @@ A simple/basic/straightforward implementation.
 I had to use java.math.BigDecimal for the mean to get
 [measurements-rounding.txt](https://github.com/gunnarmorling/1brc/blob/main/src/test/resources/samples/measurements-rounding.txt)
 to pass.
+
