@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class TOBRC01 extends AbstractTOBRC {
 	public static void main(final String args[]) throws Exception {
-		new TOBRC00().run(args);
+		new TOBRC01().run(args);
 	}
 
 	protected Collection<StationSummary> calculate(final File inputFile) throws Exception {
@@ -58,7 +58,7 @@ public class TOBRC01 extends AbstractTOBRC {
 		}
 
 		public double getAvg() {
-			return this.sum / this.count;
+			return (Math.round(this.sum * 10.0) / 10.0) / this.count;
 		}
 	}
 }
