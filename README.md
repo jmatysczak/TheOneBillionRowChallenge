@@ -95,7 +95,11 @@ java.util.regex.Pattern                                                   0.00%
 
 #### [TOBRC01](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC01.java)
 
-Replaced `java.math.BigDecimal` with `double` and fixed rounding issue.
+Replaced `java.math.BigDecimal` with `double` and used the rounding code from
+[Baseline](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java)
+to get
+[measurements-rounding.txt](https://github.com/gunnarmorling/1brc/blob/main/src/test/resources/samples/measurements-rounding.txt)
+to pass.
 
 ```
 $ gradle run -Pversion=01 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"

@@ -58,6 +58,8 @@ public class TOBRC01 extends AbstractTOBRC {
 		}
 
 		public double getAvg() {
+			// Rounding logic copied from:
+			// https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java
 			return (Math.round(this.sum * 10.0) / 10.0) / this.count;
 		}
 	}
