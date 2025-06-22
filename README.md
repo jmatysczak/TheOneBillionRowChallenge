@@ -26,6 +26,7 @@ Times in seconds.
 | [Baseline](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java) |       1 |   1.77 |  13.67 | 161.40 |
 | [00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)           |       1 |   2.81 |  24.74 | 236.02 |
 | [01](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC01.java)           |       1 |   1.93 |  15.44 | 155.97 |
+| [02](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC02.java)           |       1 |   0.67 |   5.63 |  73.14 |
 
 
 #### [TOBRC00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -131,7 +132,7 @@ java.util.HashMap.hash(Object)                                                  
 java.lang.StringUTF16.compress(byte[], int, int)                                                              1   0.32%
 
 
-jfr view allocation-by-class app/100m.jfr
+$ jfr view allocation-by-class app/100m.jfr
 
                               Allocation by Class
 
@@ -147,4 +148,36 @@ java.util.ArrayList$SubList                                               0.00%
 java.util.ArrayList                                                       0.00%
 char[]                                                                    0.00%
 java.util.ArrayList$Itr                                                   0.00%
+```
+
+
+#### [TOBRC02](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC02.java)
+
+Process the input as bytes.
+
+```
+$ gradle run -Pversion=02 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
+$ jfr view hot-methods app/100m.jfr
+
+                          Java Methods that Executes the Most
+
+Method                                                                  Samples Percent
+----------------------------------------------------------------------- ------- -------
+jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)      28  50.91%
+java.util.HashMap.getNode(Object)                                            25  45.45%
+jmat.tobrc.TOBRC02.calculate(File)                                            1   1.82%
+jdk.jfr.internal.periodic.PeriodicEvents.doPeriodic()                         1   1.82%
+
+
+$ jfr view allocation-by-class app/100m.jfr
+
+                              Allocation by Class
+
+Object Type                                                 Allocation Pressure
+----------------------------------------------------------- -------------------
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.33%
+java.util.Formatter$FormatSpecifierParser                                 5.07%
+byte[]                                                                    2.54%
+java.nio.HeapCharBuffer                                                   2.54%
+java.lang.classfile.constantpool.PoolEntry[]                              2.53%
 ```

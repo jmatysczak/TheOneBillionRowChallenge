@@ -69,7 +69,9 @@ public abstract class AbstractTOBRC {
 
 		this.processFile(new File(inputFile), File.createTempFile("TOBRCResults", ".txt"));
 
-		System.out.format("Elapsed time: %s sec", (System.nanoTime() - startTime) / 1_000_000_000.00);
+		final double elapsedTimeSeconds = (System.nanoTime() - startTime) / 1_000_000_000.00;
+
+		System.out.format("Elapsed time for %s: %s seconds", this.getClass().getName(), elapsedTimeSeconds);
 	}
 
 	protected void processFile(final File inputFile, final File actualFile) throws Exception {
