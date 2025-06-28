@@ -27,6 +27,7 @@ Times in seconds.
 | [00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)           |       1 |   2.81 |  24.74 | 236.02 |
 | [01](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC01.java)           |       1 |   1.93 |  15.44 | 155.97 |
 | [02](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC02.java)           |       1 |   0.67 |   5.63 |  73.14 |
+| [03](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC03.java)           |       1 |   0.61 |   4.45 |  59.36 |
 
 
 #### [TOBRC00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -181,3 +182,35 @@ byte[]                                                                    2.54%
 java.nio.HeapCharBuffer                                                   2.54%
 java.lang.classfile.constantpool.PoolEntry[]                              2.53%
 ```
+
+
+#### [TOBRC03](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC03.java)
+
+Instead of using a `java.util.HashMap` use the hash that is already being calculated and index into an array.
+
+NOTE: The array size is not dynamic. It defaults to `1024 * 20`. The runtimes were collected with an array
+      size of `1024` specified with `-PTOBRC_Hash_Size=1024`.
+
+```
+$ gradle run -Pversion=03 -PTOBRC_Hash_Size=1024 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
+$ jfr view hot-methods app/100m.jfr
+
+                      Java Methods that Executes the Most
+
+Method                                                          Samples Percent
+--------------------------------------------------------------- ------- -------
+jmat.tobrc.TOBRC03.calculate(File)                                   39 100.00%
+
+
+$ jfr view allocation-by-class app/100m.jfr
+
+                              Allocation by Class
+
+Object Type                                                 Allocation Pressure
+----------------------------------------------------------- -------------------
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.36%
+byte[]                                                                    7.59%
+java.lang.Object[]                                                        2.54%
+int[]                                                                     2.51%
+```
+
