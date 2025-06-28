@@ -4,17 +4,13 @@ Some fun coding using: https://github.com/gunnarmorling/1brc
 
 ```
 # To run tests for a specific version:
-$ gradle run -Pversion=00
+$ gradle run -Pversion=03
 
 # To process a file:
-$ gradle run -Pversion=00 --args="../../1brc-data/measurements_100m.txt"
+$ gradle run -Pversion=03 -PTOBRC_Hash_Size=1024 --args="../../1brc-data/measurements_100m.txt"
 
 # To run with Java Flight Recorder:
-$ gradle run -Pversion=00 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
-
-# To view the methods that are sampled the most:
-$ jfr view hot-methods app/100m.jfr
-
+$ gradle run -Pversion=03 -PTOBRC_Hash_Size=1024 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
 ```
 
 #### Results
@@ -24,10 +20,13 @@ Times in seconds.
 | Version                                                                                                                     | Threads | 10m    | 100m   | 1b     |
 | :------                                                                                                                     | ------: | -----: | -----: | -----: |
 | [Baseline](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java) |       1 |   1.77 |  13.67 | 161.40 |
-| [00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)           |       1 |   2.81 |  24.74 | 236.02 |
-| [01](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC01.java)           |       1 |   1.93 |  15.44 | 155.97 |
-| [02](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC02.java)           |       1 |   0.67 |   5.63 |  73.14 |
-| [03](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC03.java)           |       1 |   0.61 |   4.45 |  59.36 |
+| [00](/app/src/main/java/jmat/tobrc/TOBRC00.java)                                                                            |       1 |   2.81 |  24.74 | 236.02 |
+| [01](/app/src/main/java/jmat/tobrc/TOBRC01.java)                                                                            |       1 |   1.93 |  15.44 | 155.97 |
+| [02](/app/src/main/java/jmat/tobrc/TOBRC02.java)                                                                            |       1 |   0.67 |   5.63 |  73.14 |
+| [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)<sup>1</sup>                                                                |       1 |   0.61 |   4.45 |  59.36 |
+
+Footnotes:
+- <sup>1</sup>Hash array size was `1024` (`-PTOBRC_Hash_Size=1024`).
 
 
 #### [TOBRC00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)
