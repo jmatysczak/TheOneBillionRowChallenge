@@ -7,10 +7,10 @@ Some fun coding using: https://github.com/gunnarmorling/1brc
 $ gradle run -Pversion=03
 
 # To process a file:
-$ gradle run -Pversion=03 -PTOBRC_Hash_Size=1024 --args="../../1brc-data/measurements_100m.txt"
+$ gradle run -Pversion=03 --args="../../1brc-data/measurements_1b.txt"
 
 # To run with Java Flight Recorder:
-$ gradle run -Pversion=03 -PTOBRC_Hash_Size=1024 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
+$ gradle run -Pversion=03 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=1b.jfr" --args="../../1brc-data/measurements_1b.txt"
 ```
 
 #### Results
@@ -23,10 +23,7 @@ Times in seconds.
 | [00](/app/src/main/java/jmat/tobrc/TOBRC00.java)                                                                            |       1 |   2.81 |  24.74 | 236.02 |
 | [01](/app/src/main/java/jmat/tobrc/TOBRC01.java)                                                                            |       1 |   1.93 |  15.44 | 155.97 |
 | [02](/app/src/main/java/jmat/tobrc/TOBRC02.java)                                                                            |       1 |   0.67 |   5.63 |  73.14 |
-| [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)<sup>1</sup>                                                                |       1 |   0.61 |   4.45 |  59.36 |
-
-Footnotes:
-- <sup>1</sup>Hash array size was `1024` (`-PTOBRC_Hash_Size=1024`).
+| [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)                                                                            |       1 |   0.59 |   4.78 |  61.45 |
 
 
 #### [TOBRC00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -187,29 +184,32 @@ java.lang.classfile.constantpool.PoolEntry[]                              2.53%
 
 Instead of using a `java.util.HashMap` use the hash that is already being calculated and index into an array.
 
-NOTE: The array size is not dynamic. It defaults to `1024 * 20`. The runtimes were collected with an array
-      size of `1024` specified with `-PTOBRC_Hash_Size=1024`.
-
 ```
-$ gradle run -Pversion=03 -PTOBRC_Hash_Size=1024 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
-$ jfr view hot-methods app/100m.jfr
+$ gradle run -Pversion=03 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=1b.jfr" --args="../../1brc-data/measurements_1b.txt"
+$ jfr view hot-methods app/1b.jfr
 
-                      Java Methods that Executes the Most
+                          Java Methods that Executes the Most
 
-Method                                                          Samples Percent
---------------------------------------------------------------- ------- -------
-jmat.tobrc.TOBRC03.calculate(File)                                   39 100.00%
+Method                                                                  Samples Percent
+----------------------------------------------------------------------- ------- -------
+jmat.tobrc.TOBRC03.calculate(File)                                          482  74.96%
+jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)     157  24.42%
+jdk.internal.math.FormattedFPDecimal.fillWithDigits(long, int, int)           1   0.16%
+java.io.FileInputStream.read(byte[], int, int)                                1   0.16%
+jdk.jfr.internal.PlatformRecorder.flush()                                     1   0.16%
+jdk.jfr.internal.event.EventConfiguration.isEnabled()                         1   0.16%
 
 
-$ jfr view allocation-by-class app/100m.jfr
+$ jfr view allocation-by-class app/1b.jfr
 
                               Allocation by Class
 
 Object Type                                                 Allocation Pressure
 ----------------------------------------------------------- -------------------
-java.util.concurrent.ConcurrentHashMap$Node[]                            87.36%
-byte[]                                                                    7.59%
-java.lang.Object[]                                                        2.54%
-int[]                                                                     2.51%
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.33%
+java.lang.Double                                                          5.15%
+byte[]                                                                    2.54%
+java.lang.classfile.constantpool.PoolEntry[]                              2.53%
+java.lang.Object[]                                                        2.46%
 ```
 

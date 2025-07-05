@@ -14,7 +14,9 @@ public class TOBRC03 extends AbstractTOBRC {
 	}
 
 	protected Collection<StationSummary> calculate(final File inputFile) throws Exception {
-		final var measurementSummaries = new MeasurementSummary[Integer.parseInt(System.getProperty("TOBRC_Hash_Size", "20480"))];
+		var measurementSummaries = new MeasurementSummary[1024];
+		var numberOfMeasurementSummaries = 0;
+		var measurementSummariesTheshold = measurementSummaries.length * 0.75;
 
 		try(var in = new FileInputStream(inputFile)) {
 			final var bytes = new byte[1024 * 4];
@@ -40,14 +42,34 @@ public class TOBRC03 extends AbstractTOBRC {
 						}
 					} else {
 						if(bytes[i] == '\n') {
-							final var startIndex = Math.abs(stationHash) % measurementSummaries.length;
-							for(int j = startIndex, count = measurementSummaries.length; count > 0; j = ((j + 1) % measurementSummaries.length), count--) {
+							final var hashCode = Math.abs(stationHash);
+							final var startIndex = hashCode % measurementSummaries.length;
+							for(var j = startIndex; true; j = ((j + 1) % measurementSummaries.length)) {
 								final var measurementSummary = measurementSummaries[j];
 								if(measurementSummary == null) {
-									var copyOfBytes = Arrays.copyOfRange(bytes, stationStart, stationFinish);
-									measurementSummaries[j] = new MeasurementSummary(
-										copyOfBytes, new String(copyOfBytes, StandardCharsets.UTF_8), measurement * sign
-									);
+									var stationAsBytes = Arrays.copyOfRange(bytes, stationStart, stationFinish);
+									var stationAsString = new String(stationAsBytes, StandardCharsets.UTF_8);
+									measurementSummaries[j] = new MeasurementSummary(hashCode, stationAsBytes, stationAsString, measurement * sign);
+									numberOfMeasurementSummaries++;
+
+									if(numberOfMeasurementSummaries > measurementSummariesTheshold) {
+										var newMeasurementSummaries = new MeasurementSummary[measurementSummaries.length * 2];
+										for(var k = 0; k < measurementSummaries.length; k++) {
+											final var measurementSummaryToMove = measurementSummaries[k];
+											if(measurementSummaryToMove != null) {
+												final var newStartIndex = measurementSummaryToMove.hashCode % newMeasurementSummaries.length;
+												for(var l = newStartIndex; true; l = ((l + 1) % newMeasurementSummaries.length)) {
+													if(newMeasurementSummaries[l] == null) {
+														newMeasurementSummaries[l] = measurementSummaryToMove;
+														break;
+													}
+												}
+											}
+										}
+										measurementSummaries = newMeasurementSummaries;
+										measurementSummariesTheshold = measurementSummaries.length * 0.75;
+									}
+
 									break;
 								} else {
 									var currentLength = stationFinish - stationStart;
@@ -102,6 +124,7 @@ public class TOBRC03 extends AbstractTOBRC {
 	}
 
 	class MeasurementSummary {
+		public final int hashCode;
 		public final byte[] stationAsBytes;
 		public final String station;
 		private int min;
@@ -109,7 +132,8 @@ public class TOBRC03 extends AbstractTOBRC {
 		private long sum;
 		private int count;
 
-		public MeasurementSummary(final byte[] stationAsBytes, final String station, final int measurement) {
+		public MeasurementSummary(final int hashCode, final byte[] stationAsBytes, final String station, final int measurement) {
+			this.hashCode = hashCode;
 			this.stationAsBytes = stationAsBytes;
 			this.station = station;
 			this.min = measurement;
