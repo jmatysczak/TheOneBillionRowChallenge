@@ -24,7 +24,7 @@ Times in seconds.
 | [01](/app/src/main/java/jmat/tobrc/TOBRC01.java)                                                                            |       1 |   1.93 |  15.44 | 155.97 |
 | [02](/app/src/main/java/jmat/tobrc/TOBRC02.java)                                                                            |       1 |   0.67 |   5.63 |  73.14 |
 | [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)                                                                            |       1 |   0.59 |   4.78 |  61.45 |
-| [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.60 |   4.87 |  66.82 |
+| [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.71 |   6.31 |  81.68 |
 
 
 #### [TOBRC00](/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -219,4 +219,30 @@ java.lang.Object[]                                                        2.46%
 
 No performance improvements. Refectored the hash table code to see if I could make it cleaner.
 
+```
+$ gradle run -Pversion=04 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=1b.jfr" --args="../../1brc-data/measurements_1b.txt"
+$ jfr view hot-methods app/1b.jfr
+
+                          Java Methods that Executes the Most
+
+Method                                                                  Samples Percent
+----------------------------------------------------------------------- ------- -------
+jmat.tobrc.TOBRC04$HashMap.addOrUpdate(int, byte[], int, int, int)          508  48.38%
+jmat.tobrc.TOBRC04.calculate(File)                                          358  34.10%
+jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)     183  17.43%
+java.lang.Thread.run()                                                        1   0.10%
+
+
+$ jfr view allocation-by-class app/1b.jfr
+
+                              Allocation by Class
+
+Object Type                                                 Allocation Pressure
+----------------------------------------------------------- -------------------
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.32%
+java.util.Formatter                                                       5.07%
+java.util.ArrayList                                                       2.54%
+byte[]                                                                    2.54%
+java.util.regex.Pattern                                                   2.54%
+```
 
