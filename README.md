@@ -24,9 +24,10 @@ Times in seconds.
 | [01](/app/src/main/java/jmat/tobrc/TOBRC01.java)                                                                            |       1 |   1.93 |  15.44 | 155.97 |
 | [02](/app/src/main/java/jmat/tobrc/TOBRC02.java)                                                                            |       1 |   0.67 |   5.63 |  73.14 |
 | [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)                                                                            |       1 |   0.59 |   4.78 |  61.45 |
+| [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.60 |   4.87 |  66.82 |
 
 
-#### [TOBRC00](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC00.java)
+#### [TOBRC00](/app/src/main/java/jmat/tobrc/TOBRC00.java)
 
 A simple/basic/straightforward implementation.
 
@@ -91,7 +92,7 @@ java.util.regex.Pattern                                                   0.00%
 ```
 
 
-#### [TOBRC01](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC01.java)
+#### [TOBRC01](/app/src/main/java/jmat/tobrc/TOBRC01.java)
 
 Replaced `java.math.BigDecimal` with `double` and used the rounding code from
 [Baseline](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java)
@@ -148,7 +149,7 @@ java.util.ArrayList$Itr                                                   0.00%
 ```
 
 
-#### [TOBRC02](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC02.java)
+#### [TOBRC02](/app/src/main/java/jmat/tobrc/TOBRC02.java)
 
 Process the input as bytes.
 
@@ -180,7 +181,7 @@ java.lang.classfile.constantpool.PoolEntry[]                              2.53%
 ```
 
 
-#### [TOBRC03](https://github.com/jmatysczak/TheOneBillionRowChallenge/blob/main/app/src/main/java/jmat/tobrc/TOBRC03.java)
+#### [TOBRC03](/app/src/main/java/jmat/tobrc/TOBRC03.java)
 
 Instead of using a `java.util.HashMap` use the hash that is already being calculated and index into an array.
 
@@ -212,4 +213,10 @@ byte[]                                                                    2.54%
 java.lang.classfile.constantpool.PoolEntry[]                              2.53%
 java.lang.Object[]                                                        2.46%
 ```
+
+
+#### [TOBRC04](/app/src/main/java/jmat/tobrc/TOBRC04.java)
+
+No performance improvements. Refectored the hash table code to see if I could make it cleaner.
+
 
