@@ -26,6 +26,7 @@ Times in seconds.
 | [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)                                                                            |       1 |   0.59 |   6.72 |  69.90 |
 | [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.78 |   8.35 |  84.64 |
 | [05](/app/src/main/java/jmat/tobrc/TOBRC05.java)                                                                            |       1 |   0.62 |   6.67 |  67.69 |
+| [06](/app/src/main/java/jmat/tobrc/TOBRC06.java)                                                                            |       1 |   0.56 |   4.04 |  66.66 |
 
 
 #### [TOBRC00](/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -271,4 +272,10 @@ java.nio.HeapCharBuffer                                                   5.07%
 byte[]                                                                    5.07%
 char[]                                                                    2.60%
 ```
+
+
+#### [TOBRC06](/app/src/main/java/jmat/tobrc/TOBRC06.java)
+
+Use a FileChannel instead of a FileInputStream to read the file. Also changed the logic for reading measurements.
+
 
