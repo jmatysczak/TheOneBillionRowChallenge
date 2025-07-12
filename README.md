@@ -25,6 +25,7 @@ Times in seconds.
 | [02](/app/src/main/java/jmat/tobrc/TOBRC02.java)                                                                            |       1 |   0.69 |   7.52 |  77.26 |
 | [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)                                                                            |       1 |   0.59 |   6.72 |  69.90 |
 | [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.78 |   8.35 |  84.64 |
+| [05](/app/src/main/java/jmat/tobrc/TOBRC05.java)                                                                            |       1 |   0.62 |   6.67 |  67.69 |
 
 
 #### [TOBRC00](/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -239,5 +240,35 @@ java.lang.Double                                                          5.06%
 java.util.HashMap                                                         2.53%
 java.lang.String                                                          2.53%
 char[]                                                                    2.53%
+```
+
+
+#### [TOBRC05](/app/src/main/java/jmat/tobrc/TOBRC05.java)
+
+Based on version 3 with a change to how the station names are compared.
+
+```
+$ gradle run -Pversion=05 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=1b.jfr" --args="../../1brc-data/measurements_1b.txt"
+$ jfr view hot-methods app/1b.jfr
+
+                      Java Methods that Executes the Most
+
+Method                                                          Samples Percent
+--------------------------------------------------------------- ------- -------
+jmat.tobrc.TOBRC05.calculate(File)                                  755  99.74%
+java.io.FileInputStream.read(byte[], int, int)                        1   0.13%
+jmat.tobrc.TOBRC05$MeasurementSummary.add(int)                        1   0.13%
+
+
+$ jfr view allocation-by-class app/1b.jfr
+
+                              Allocation by Class
+
+Object Type                                                 Allocation Pressure
+----------------------------------------------------------- -------------------
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.26%
+java.nio.HeapCharBuffer                                                   5.07%
+byte[]                                                                    5.07%
+char[]                                                                    2.60%
 ```
 
