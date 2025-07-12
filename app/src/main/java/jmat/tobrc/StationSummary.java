@@ -1,9 +1,23 @@
 package jmat.tobrc;
 
 
-public record StationSummary(String station, double min, double avg, double max) implements Comparable<StationSummary> {
+public abstract class StationSummary implements Comparable<StationSummary> {
+	public final String station;
+
+	public StationSummary(final String station) {
+		this.station = station;
+	}
+
+	public String getStation() {
+		return this.station;
+	}
+
+	public abstract double getMin();
+	public abstract double getAvg();
+	public abstract double getMax();
+
 	public int compareTo(final StationSummary other) {
-		return this.station.compareTo(other.station);
+		return this.getStation().compareTo(other.getStation());
 	}
 }
 

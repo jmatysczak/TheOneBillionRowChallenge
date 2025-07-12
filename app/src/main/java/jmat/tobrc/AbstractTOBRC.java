@@ -54,6 +54,7 @@ public abstract class AbstractTOBRC {
 			final var expectedResults = Files.readString(testCase.expectedFile().toPath());
 
 			if(actualResults.equals(expectedResults)) {
+				actualFile.delete();
 				System.out.println("Passed!");
 			} else {
 				System.out.println("Failed!");
@@ -79,9 +80,9 @@ public abstract class AbstractTOBRC {
 		this.write(results, actualFile);
 	}
 
-	protected abstract Collection<StationSummary> calculate(final File inputFile) throws Exception;
+	protected abstract Collection<? extends StationSummary> calculate(final File inputFile) throws Exception;
 
-	protected void write(final Collection<StationSummary> results, final File outputFile) throws Exception {
+	protected void write(final Collection<? extends StationSummary> results, final File outputFile) throws Exception {
 		try(final var writer = new FileWriter(outputFile)) {
 			writer.write("{");
 			boolean addComma = false;
@@ -89,13 +90,13 @@ public abstract class AbstractTOBRC {
 			for(final var result : resultsSorted) {
 				if(addComma) writer.write(", ");
 
-				writer.write(result.station());
+				writer.write(result.getStation());
 				writer.write("=");
-				writer.write(String.format("%.1f", result.min()));
+				writer.write(String.format("%.1f", result.getMin()));
 				writer.write("/");
-				writer.write(String.format("%.1f", result.avg()));
+				writer.write(String.format("%.1f", result.getAvg()));
 				writer.write("/");
-				writer.write(String.format("%.1f", result.max()));
+				writer.write(String.format("%.1f", result.getMax()));
 
 				addComma = true;
 			}

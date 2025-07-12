@@ -13,7 +13,7 @@ public class TOBRC01 extends AbstractTOBRC {
 		new TOBRC01().run(args);
 	}
 
-	protected Collection<StationSummary> calculate(final File inputFile) throws Exception {
+	protected Collection<? extends StationSummary> calculate(final File inputFile) throws Exception {
 		final var stationToMeasurementSummary = new HashMap<String, MeasurementSummary>();
 
 		try(var in = new BufferedReader(new FileReader(inputFile))) {
@@ -32,18 +32,17 @@ public class TOBRC01 extends AbstractTOBRC {
 			}
 		}
 
-		return stationToMeasurementSummary.values().stream().map(ms -> new StationSummary(ms.station, ms.min, ms.getAvg(), ms.max)).toList();
+		return stationToMeasurementSummary.values();
 	}
 
-	class MeasurementSummary {
-		public final String station;
+	class MeasurementSummary extends StationSummary {
 		public double min;
 		public double max;
 		public double sum;
 		public int count;
 
 		public MeasurementSummary(final String station, final double measurement) {
-			this.station = station;
+			super(station);
 			this.min = measurement;
 			this.max = measurement;
 			this.sum = measurement;
@@ -57,10 +56,18 @@ public class TOBRC01 extends AbstractTOBRC {
 			this.count++;
 		}
 
+		public double getMin() {
+			return this.min;
+		}
+
 		public double getAvg() {
 			// Rounding logic copied from:
 			// https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java
 			return (Math.round(this.sum * 10.0) / 10.0) / this.count;
+		}
+
+		public double getMax() {
+			return this.max;
 		}
 	}
 }

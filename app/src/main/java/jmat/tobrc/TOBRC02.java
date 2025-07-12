@@ -14,7 +14,7 @@ public class TOBRC02 extends AbstractTOBRC {
 		new TOBRC02().run(args);
 	}
 
-	protected Collection<StationSummary> calculate(final File inputFile) throws Exception {
+	protected Collection<? extends StationSummary> calculate(final File inputFile) throws Exception {
 		final var lookupStation = new Station();
 		final var stationToMeasurementSummary = new HashMap<Station, MeasurementSummary>();
 
@@ -85,7 +85,7 @@ public class TOBRC02 extends AbstractTOBRC {
 			}
 		}
 
-		return stationToMeasurementSummary.values().stream().map(ms -> new StationSummary(ms.station, ms.getMin(), ms.getAvg(), ms.getMax())).toList();
+		return stationToMeasurementSummary.values();
 	}
 
 	class Station {
@@ -128,15 +128,14 @@ public class TOBRC02 extends AbstractTOBRC {
 		}
 	}
 
-	class MeasurementSummary {
-		public final String station;
+	class MeasurementSummary extends StationSummary {
 		private int min;
 		private int max;
 		private long sum;
 		private int count;
 
 		public MeasurementSummary(final String station, final int measurement) {
-			this.station = station;
+			super(station);
 			this.min = measurement;
 			this.max = measurement;
 			this.sum = measurement;

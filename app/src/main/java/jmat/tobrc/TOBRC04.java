@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Stream;
 
 
 public class TOBRC04 extends AbstractTOBRC {
@@ -14,7 +13,7 @@ public class TOBRC04 extends AbstractTOBRC {
 		new TOBRC04().run(args);
 	}
 
-	protected Collection<StationSummary> calculate(final File inputFile) throws Exception {
+	protected Collection<? extends StationSummary> calculate(final File inputFile) throws Exception {
 		var measurementSummaries = new HashMap();
 
 		try(var in = new FileInputStream(inputFile)) {
@@ -74,9 +73,7 @@ public class TOBRC04 extends AbstractTOBRC {
 			}
 		}
 
-		return measurementSummaries.getMeasurementSummaries()
-			.map(ms -> new StationSummary(ms.station, ms.getMin(), ms.getAvg(), ms.getMax()))
-			.toList();
+		return measurementSummaries.getMeasurementSummaries();
 	}
 
 	class HashMap {
@@ -132,24 +129,23 @@ public class TOBRC04 extends AbstractTOBRC {
 			}
 		}
 
-		public Stream<MeasurementSummary> getMeasurementSummaries() {
-			return Arrays.stream(measurementSummaries).filter(ms -> ms != null);
+		public Collection<MeasurementSummary> getMeasurementSummaries() {
+			return Arrays.stream(measurementSummaries).filter(ms -> ms != null).toList();
 		}
 	}
 
-	class MeasurementSummary {
+	class MeasurementSummary extends StationSummary {
 		public final int hashCode;
 		public final byte[] stationAsBytes;
-		public final String station;
 		private int min;
 		private int max;
 		private long sum;
 		private int count;
 
 		public MeasurementSummary(final int hashCode, final byte[] stationAsBytes, final String station, final int measurement) {
+			super(station);
 			this.hashCode = hashCode;
 			this.stationAsBytes = stationAsBytes;
-			this.station = station;
 			this.min = measurement;
 			this.max = measurement;
 			this.sum = measurement;
