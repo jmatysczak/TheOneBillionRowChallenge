@@ -22,9 +22,9 @@ Times in seconds.
 | [Baseline](https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_baseline.java) |       1 |   1.77 |  13.67 | 161.40 |
 | [00](/app/src/main/java/jmat/tobrc/TOBRC00.java)                                                                            |       1 |   2.81 |  24.74 | 236.02 |
 | [01](/app/src/main/java/jmat/tobrc/TOBRC01.java)                                                                            |       1 |   1.93 |  15.44 | 155.97 |
-| [02](/app/src/main/java/jmat/tobrc/TOBRC02.java)                                                                            |       1 |   0.67 |   5.63 |  73.14 |
-| [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)                                                                            |       1 |   0.59 |   4.78 |  61.45 |
-| [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.71 |   6.31 |  81.68 |
+| [02](/app/src/main/java/jmat/tobrc/TOBRC02.java)                                                                            |       1 |   0.69 |   7.52 |  77.26 |
+| [03](/app/src/main/java/jmat/tobrc/TOBRC03.java)                                                                            |       1 |   0.59 |   6.72 |  69.90 |
+| [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.78 |   8.35 |  84.64 |
 
 
 #### [TOBRC00](/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -154,30 +154,28 @@ java.util.ArrayList$Itr                                                   0.00%
 Process the input as bytes.
 
 ```
-$ gradle run -Pversion=02 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=100m.jfr" --args="../../1brc-data/measurements_100m.txt"
-$ jfr view hot-methods app/100m.jfr
+$ gradle run -Pversion=02 -Pjfr="-XX:StartFlightRecording=duration=120s,filename=1b.jfr" --args="../../1brc-data/measurements_1b.txt"
+$ jfr view hot-methods app/1b.jfr
 
                           Java Methods that Executes the Most
 
 Method                                                                  Samples Percent
 ----------------------------------------------------------------------- ------- -------
-jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)      28  50.91%
-java.util.HashMap.getNode(Object)                                            25  45.45%
-jmat.tobrc.TOBRC02.calculate(File)                                            1   1.82%
-jdk.jfr.internal.periodic.PeriodicEvents.doPeriodic()                         1   1.82%
+jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)     307  56.85%
+java.util.HashMap.getNode(Object)                                           208  38.52%
+jmat.tobrc.TOBRC02.calculate(File)                                           25   4.63%
 
 
-$ jfr view allocation-by-class app/100m.jfr
+$ jfr view allocation-by-class app/1b.jfr
 
                               Allocation by Class
 
 Object Type                                                 Allocation Pressure
 ----------------------------------------------------------- -------------------
-java.util.concurrent.ConcurrentHashMap$Node[]                            87.33%
-java.util.Formatter$FormatSpecifierParser                                 5.07%
-byte[]                                                                    2.54%
-java.nio.HeapCharBuffer                                                   2.54%
-java.lang.classfile.constantpool.PoolEntry[]                              2.53%
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.34%
+java.lang.Object[]                                                        5.07%
+byte[]                                                                    5.07%
+int[]                                                                     2.51%
 ```
 
 
@@ -193,12 +191,9 @@ $ jfr view hot-methods app/1b.jfr
 
 Method                                                                  Samples Percent
 ----------------------------------------------------------------------- ------- -------
-jmat.tobrc.TOBRC03.calculate(File)                                          482  74.96%
-jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)     157  24.42%
-jdk.internal.math.FormattedFPDecimal.fillWithDigits(long, int, int)           1   0.16%
-java.io.FileInputStream.read(byte[], int, int)                                1   0.16%
-jdk.jfr.internal.PlatformRecorder.flush()                                     1   0.16%
-jdk.jfr.internal.event.EventConfiguration.isEnabled()                         1   0.16%
+jmat.tobrc.TOBRC03.calculate(File)                                          259  76.63%
+jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)      78  23.08%
+jdk.jfr.internal.periodic.JVMEventTask.execute(long, PeriodicType)            1   0.30%
 
 
 $ jfr view allocation-by-class app/1b.jfr
@@ -207,11 +202,10 @@ $ jfr view allocation-by-class app/1b.jfr
 
 Object Type                                                 Allocation Pressure
 ----------------------------------------------------------- -------------------
-java.util.concurrent.ConcurrentHashMap$Node[]                            87.33%
-java.lang.Double                                                          5.15%
-byte[]                                                                    2.54%
-java.lang.classfile.constantpool.PoolEntry[]                              2.53%
-java.lang.Object[]                                                        2.46%
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.32%
+byte[]                                                                    7.61%
+java.lang.StringBuilder                                                   2.54%
+java.util.concurrent.ConcurrentHashMap$Node                               2.54%
 ```
 
 
@@ -227,10 +221,11 @@ $ jfr view hot-methods app/1b.jfr
 
 Method                                                                  Samples Percent
 ----------------------------------------------------------------------- ------- -------
-jmat.tobrc.TOBRC04$HashMap.addOrUpdate(int, byte[], int, int, int)          508  48.38%
-jmat.tobrc.TOBRC04.calculate(File)                                          358  34.10%
-jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)     183  17.43%
-java.lang.Thread.run()                                                        1   0.10%
+jmat.tobrc.TOBRC04$HashMap.addOrUpdate(int, byte[], int, int, int)          335  48.06%
+jmat.tobrc.TOBRC04.calculate(File)                                          234  33.57%
+jdk.internal.util.ArraysSupport.mismatch(byte[], int, byte[], int, int)     126  18.08%
+java.io.FileInputStream.available()                                           1   0.14%
+java.nio.CharBuffer.wrap(char[], int, int)                                    1   0.14%
 
 
 $ jfr view allocation-by-class app/1b.jfr
@@ -239,10 +234,10 @@ $ jfr view allocation-by-class app/1b.jfr
 
 Object Type                                                 Allocation Pressure
 ----------------------------------------------------------- -------------------
-java.util.concurrent.ConcurrentHashMap$Node[]                            87.32%
-java.util.Formatter                                                       5.07%
-java.util.ArrayList                                                       2.54%
-byte[]                                                                    2.54%
-java.util.regex.Pattern                                                   2.54%
+java.util.concurrent.ConcurrentHashMap$Node[]                            87.33%
+java.lang.Double                                                          5.06%
+java.util.HashMap                                                         2.53%
+java.lang.String                                                          2.53%
+char[]                                                                    2.53%
 ```
 
