@@ -27,6 +27,7 @@ Times in seconds.
 | [04](/app/src/main/java/jmat/tobrc/TOBRC04.java)                                                                            |       1 |   0.78 |   8.35 |  84.64 |
 | [05](/app/src/main/java/jmat/tobrc/TOBRC05.java)                                                                            |       1 |   0.62 |   6.67 |  67.69 |
 | [06](/app/src/main/java/jmat/tobrc/TOBRC06.java)                                                                            |       1 |   0.56 |   4.04 |  66.66 |
+| [07](/app/src/main/java/jmat/tobrc/TOBRC07.java)                                                                            |       1 |   0.58 |   4.62 |  68.77 |
 
 
 #### [TOBRC00](/app/src/main/java/jmat/tobrc/TOBRC00.java)
@@ -278,4 +279,8 @@ char[]                                                                    2.60%
 
 Use a FileChannel instead of a FileInputStream to read the file. Also changed the logic for reading measurements.
 
+
+#### [TOBRC07](/app/src/main/java/jmat/tobrc/TOBRC07.java)
+
+Map the input file as a MemorySegment instead of a MappedByteBuffer.
 
